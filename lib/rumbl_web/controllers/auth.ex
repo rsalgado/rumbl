@@ -41,8 +41,10 @@ defmodule RumblWeb.Auth do
       {:ok, user} ->
         updated_conn = login(conn, user)
         {:ok, updated_conn}
-      {:error, :unauthorized} ->  {:error, :unauthorized, conn}
-      {:error, :not_found} -> {:error, :not_found, conn}
+      {:error, :unauthorized} ->
+        {:error, :unauthorized, conn}
+      {:error, :not_found} ->
+        {:error, :not_found, conn}
     end
   end
 
