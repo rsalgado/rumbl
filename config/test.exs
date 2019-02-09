@@ -16,3 +16,6 @@ config :rumbl, Rumbl.Repo,
   database: "rumbl_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Reduce the number of rounds in hashing algorithm to avoid slow tests
+config :pbkdf2_elixir, rounds: 1
