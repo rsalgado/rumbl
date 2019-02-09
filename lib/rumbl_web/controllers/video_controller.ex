@@ -17,7 +17,7 @@ defmodule RumblWeb.VideoController do
   def action(conn, _) do
     args = [conn, conn.params, conn.assigns.current_user]
     apply(__MODULE__, action_name(conn), args)
-  end  
+  end
 
 
   # Controller's actions

@@ -21,6 +21,8 @@ defmodule RumblWeb.ConnCase do
       use Phoenix.ConnTest
       alias RumblWeb.Router.Helpers, as: Routes
 
+      import Rumbl.TestHelpers
+
       # The default endpoint for testing
       @endpoint RumblWeb.Endpoint
     end

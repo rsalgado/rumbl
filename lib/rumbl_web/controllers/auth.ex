@@ -8,8 +8,20 @@ defmodule RumblWeb.Auth do
 
   def call(conn, _opts) do
     user_id = get_session(conn, :user_id)
-    user = user_id && Accounts.get_user(user_id)
-    assign(conn, :current_user, user)
+
+    cond do
+      # This was added to make testing easier. We leave the connection intact;
+      # No matter how the `:current_user` got in the assigns, we honor its presence
+      conn.assigns[:current_user] ->
+        conn
+      # This is the normal behavior (there's a valid user_id), so we set the `:current_user` assign
+      user = user_id && Accounts.get_user(user_id) ->
+        assign(conn, :current_user, user)
+
+      # Otherwise (no user_id or invalid user_id)
+      _otherwise = true ->
+        assign(conn, :current_user, nil)
+    end
   end
 
 
