@@ -1,3 +1,9 @@
 /* This file is for your main application css. */
 
 @import "./phoenix.css";
+@import "./video.css";
+
+/* Override default .container */
+.container {
+  max-width: 104rem;
+}
