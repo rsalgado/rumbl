@@ -21,12 +21,10 @@ defmodule Rumbl.InfoSys.Wolfram do
 
   defp build_results(nil), do: []
   defp build_results(answer) do
-    [%Result{backend: __MODULE__, score: 95, text: to_string(answer)}]
+    [%Result{backend: name(), score: 95, text: to_string(answer)}]
   end
 
   defp fetch_xml(query) do
-    #{:ok, {_, _, body}} = :httpc.request(String.to_charlist(url(query)))
-
     {:ok, {_, _, body}} =
       query
       |> url()
