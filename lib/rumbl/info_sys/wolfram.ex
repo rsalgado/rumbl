@@ -21,16 +21,18 @@ defmodule Rumbl.InfoSys.Wolfram do
 
   defp build_results(nil), do: []
   defp build_results(answer) do
-    [%Result{backend: name(), score: 95, text: to_string(answer)}]
+    [%Result{backend: __MODULE__, score: 95, text: to_string(answer)}]
   end
 
   defp fetch_xml(query) do
-    {:ok, {_, _, body}} =
+    {:ok, result} =
       query
       |> url()
       |> String.to_charlist()
       |> :httpc.request()
-
+    # Extract the response body. This is slightly different and more explicit
+    # than the book's code
+    {_status_ln, _headers, body} = result
     body
   end
 
