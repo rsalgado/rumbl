@@ -16,7 +16,7 @@ defmodule Rumbl.InfoSys do
     {uncached_backends, cached_results} =
       fetch_cached_results(backends, query, opts)
 
-    uncached_backends                           # Query the all uncached backends
+    uncached_backends                           # Query all the uncached backends
     |> Enum.map(&async_query(&1, query, opts))
     |> Task.yield_many(timeout)
     |> Enum.map(fn {task, res} ->               # Take results and kill unfinished tasks

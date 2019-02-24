@@ -26,9 +26,19 @@ defmodule RumblWeb.VideoChannel do
     case Multimedia.annotate_video(user, socket.assigns.video_id, params) do
       # When the annotation was created successfully
       {:ok, annotation} ->
-        # Broadcast event to channel and compute additional info asynchronously
+        # Broadcast event to channel
         broadcast_annotation(socket, user, annotation)
-        Task.start_link(fn -> compute_additional_info(annotation, socket) end)
+
+        # Compute additional info asynchronously if message follows "@info_sys ..." pattern
+        infosys_regex = ~r/^@info_sys (?<message>.+)$/
+        if annotation.body =~ infosys_regex do
+          # Extract just message and update annotation struct directly with it
+          captures = Regex.named_captures(infosys_regex, annotation.body)
+          annotation = %{annotation | body: captures["message"]}
+          # Launch async task
+          Task.start_link(fn -> compute_additional_info(annotation, socket) end)
+        end
+
         # Reply with OK (and keep socket's state)
         {:reply, :ok, socket}
 
