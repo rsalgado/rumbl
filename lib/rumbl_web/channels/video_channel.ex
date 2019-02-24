@@ -1,5 +1,6 @@
 alias Rumbl.{Accounts, Multimedia}
 alias RumblWeb.AnnotationView
+require Logger
 
 defmodule RumblWeb.VideoChannel do
   use RumblWeb, :channel
@@ -28,17 +29,8 @@ defmodule RumblWeb.VideoChannel do
       {:ok, annotation} ->
         # Broadcast event to channel
         broadcast_annotation(socket, user, annotation)
-
         # Compute additional info asynchronously if message follows "@info_sys ..." pattern
-        infosys_regex = ~r/^@info_sys (?<message>.+)$/
-        if annotation.body =~ infosys_regex do
-          # Extract just message and update annotation struct directly with it
-          captures = Regex.named_captures(infosys_regex, annotation.body)
-          annotation = %{annotation | body: captures["message"]}
-          # Launch async task
-          Task.start_link(fn -> compute_additional_info(annotation, socket) end)
-        end
-
+        process_infosys_annotation(annotation.body, annotation, socket)
         # Reply with OK (and keep socket's state)
         {:reply, :ok, socket}
 
@@ -48,6 +40,15 @@ defmodule RumblWeb.VideoChannel do
         {:reply, {:error, %{errors: changeset}}, socket}
     end
   end
+
+  defp process_infosys_annotation("@info_sys "<> message, annotation, socket) do
+    # Keep just the message part and update annotation struct directly with it
+    modified_ann = %{ annotation | body: message }
+    # Launch async task
+    Task.start_link(fn -> compute_additional_info(modified_ann, socket) end)
+  end
+
+  defp process_infosys_annotation(_body, _annotation, _socket), do: :ignore
 
   defp broadcast_annotation(socket, user, annotation) do
     broadcast!(socket, "new_annotation", %{
@@ -59,7 +60,11 @@ defmodule RumblWeb.VideoChannel do
   end
 
   defp compute_additional_info(annotation, socket) do
-    for result <- Rumbl.InfoSys.compute(annotation.body, limit: 1, timeout: 10_000) do
+    Logger.debug "Computing additional info from channel"
+    results = Rumbl.InfoSys.compute(annotation.body, limit: 1, timeout: 10_000)
+    Logger.debug "Found #{length(results)} results for query: #{annotation.body}"
+
+    for result <- results do
       backend_user = Accounts.get_user_by(username: result.backend.name())
       attrs = %{url: result.url, body: result.text, at: annotation.at}
 
