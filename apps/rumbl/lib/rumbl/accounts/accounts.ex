@@ -46,7 +46,7 @@ defmodule Rumbl.Accounts do
       user ->
         {:error, :unauthorized}
       true ->
-        Comeonin.Bcrypt.dummy_checkpw()
+        Comeonin.Pbkdf2.dummy_checkpw()
         {:error, :not_found}
     end
   end
