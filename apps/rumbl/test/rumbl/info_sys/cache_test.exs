@@ -1,4 +1,4 @@
-defmodule Rumbl.InfoSys.CacheTest do
+defmodule Rumbl.InfoSysTest.CacheTest do
   use ExUnit.Case, async: true
   alias Rumbl.InfoSys.Cache
 
@@ -22,7 +22,7 @@ defmodule Rumbl.InfoSys.CacheTest do
   end
 
 
-  setup %{test: name, clear_interval: clear_interval} do
+  setup(%{test: name, clear_interval: clear_interval} = _context) do
     {:ok, pid} = Cache.start_link(name: name, clear_interval: clear_interval)
     {:ok, name: name, pid: pid}
   end
