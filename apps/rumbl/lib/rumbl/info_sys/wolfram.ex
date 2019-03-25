@@ -24,12 +24,13 @@ defmodule Rumbl.InfoSys.Wolfram do
     [%Result{backend: __MODULE__, score: 95, text: to_string(answer)}]
   end
 
+  @http_client Application.get_env(:rumbl, :wolfram)[:http_client] || :httpc
   defp fetch_xml(query) do
     {:ok, result} =
       query
       |> url()
       |> String.to_charlist()
-      |> :httpc.request()
+      |> @http_client.request()
     # Extract the response body. This is slightly different and more explicit
     # than the book's code
     {_status_ln, _headers, body} = result
