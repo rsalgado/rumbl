@@ -7,6 +7,6 @@ defmodule Rumbl.InfoSys.Backends.WolframTest do
   end
 
   test "no query results reports an empty list" do
-    assert Rumbl.InfoSys.compute("none", [])
+    assert Rumbl.InfoSys.compute("none", []) == []
   end
 end
