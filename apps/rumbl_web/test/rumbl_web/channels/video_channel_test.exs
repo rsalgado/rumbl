@@ -17,4 +17,24 @@ defmodule RumblWeb.Channels.VideoChannelTest do
     assert_reply(ref, :ok, %{})
     assert_broadcast("new_annotation", %{})
   end
+
+  test "new annotations starting with @info_sys trigger InfoSys", %{socket: socket, video: vid} do
+    # Insert wolfram user
+    insert_user(%{
+      username: "wolfram",
+      credential: %{
+        email: "wolfie@example.com",
+        password: "supersecret"
+      }
+    })
+    # Subscribe and join the channel for the setup video
+    {:ok, _, socket} = subscribe_and_join(socket, "videos:#{vid.id}", %{})
+    # Send annotation with message to @info_sys (use the mockup message of "1 + 1")
+    ref = push(socket, "new_annotation", %{body: "@info_sys 1 + 1", at: 123})
+    assert_reply(ref, :ok, %{})
+    # Check that the annotation was broadcasted and check that info_sys answer 
+    # was broadcasted too
+    assert_broadcast("new_annotation", %{body: "@info_sys 1 + 1", at: 123})
+    assert_broadcast("new_annotation", %{body: "2", at: 123})
+  end
 end
