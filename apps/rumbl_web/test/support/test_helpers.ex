@@ -7,7 +7,8 @@ defmodule RumblWeb.TestHelpers do
       username: "user#{Base.encode16(:crypto.strong_rand_bytes(8))}",
       credential: %{
         email: "eva@test",
-        password: "supersecret"
+        password: "supersecret",
+        password_confirmation: "supersecret"
       }
     }
   end

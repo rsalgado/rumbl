@@ -8,7 +8,11 @@ defmodule Rumbl.AccountsTest do
     @valid_attrs %{
       name: "User",
       username: "eva",
-      credential: %{email: "eva@test", password: "secret"}
+      credential: %{
+        email: "eva@test",
+        password: "secret",
+        password_confirmation: "secret"
+      }
     }
 
     @invalid_attrs %{}
@@ -39,7 +43,9 @@ defmodule Rumbl.AccountsTest do
       attrs = Map.put(@valid_attrs, :username, String.duplicate("a", 21))
       {:error, changeset} = Accounts.register_user(attrs)
 
-      assert %{username: ["should be at most 20 character(s)"]} = errors_on(changeset)
+      assert %{username: ["should be at most 20 character(s)"]} =
+        errors_on(changeset)
+
       assert Accounts.list_users() == []
     end
 
@@ -47,10 +53,23 @@ defmodule Rumbl.AccountsTest do
       attrs = put_in(@valid_attrs, [:credential, :password], "12345")
       {:error, changeset} = Accounts.register_user(attrs)
 
-      assert %{password: ["should be at least 6 character(s)"]} = errors_on(changeset)[:credential]
+      assert %{password: ["should be at least 6 character(s)"]} =
+        errors_on(changeset)[:credential]
+
+      assert Accounts.list_users() == []
+    end
+
+    test "requires password confirmation to match with password" do
+      attrs = put_in(@valid_attrs, [:credential, :password_confirmation], "different_conf")
+      {:error, changeset} = Accounts.register_user(attrs)
+
+      assert %{password_confirmation: ["Does not match password"]} =
+        errors_on(changeset)[:credential]
+
       assert Accounts.list_users() == []
     end
   end
+
 
   describe "authenticate_by_email_and_pass/2" do
     @email "user@localhost"

@@ -24,7 +24,8 @@ defmodule RumblWeb.Channels.VideoChannelTest do
       username: "wolfram",
       credential: %{
         email: "wolfie@example.com",
-        password: "supersecret"
+        password: "supersecret",
+        password_confirmation: "supersecret"
       }
     })
     # Subscribe and join the channel for the setup video
@@ -32,7 +33,7 @@ defmodule RumblWeb.Channels.VideoChannelTest do
     # Send annotation with message to @info_sys (use the mockup message of "1 + 1")
     ref = push(socket, "new_annotation", %{body: "@info_sys 1 + 1", at: 123})
     assert_reply(ref, :ok, %{})
-    # Check that the annotation was broadcasted and check that info_sys answer 
+    # Check that the annotation was broadcasted and check that info_sys answer
     # was broadcasted too
     assert_broadcast("new_annotation", %{body: "@info_sys 1 + 1", at: 123})
     assert_broadcast("new_annotation", %{body: "2", at: 123})

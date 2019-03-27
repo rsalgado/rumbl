@@ -3,6 +3,8 @@ defmodule Rumbl.TestHelpers do
 
   def user_fixture(attrs \\ %{}) do
     username = "user_#{System.unique_integer([:positive])}"
+    email = attrs[:email] || "#{username}@example.com"
+    password = attrs[:password] || "supersecret"
 
     {:ok, user} =
       attrs
@@ -10,8 +12,9 @@ defmodule Rumbl.TestHelpers do
         name: "Some User",
         username: username,
         credential: %{
-          email: attrs[:email] || "#{username}@example.com",
-          password: attrs[:password] || "supersecret"
+          email: email,
+          password: password,
+          password_confirmation: password
         }
       })
       |> Accounts.register_user()
