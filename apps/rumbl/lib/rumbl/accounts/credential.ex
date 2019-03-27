@@ -19,6 +19,8 @@ defmodule Rumbl.Accounts.Credential do
     |> cast(attrs, [:email, :password])
     |> validate_required([:email, :password])
     |> validate_length(:password, min: 6, max: 100)
+    |> validate_confirmation(:password,
+      required: true, message: "Does not match password")
     |> unique_constraint(:email)
     |> put_pass_hash()
   end

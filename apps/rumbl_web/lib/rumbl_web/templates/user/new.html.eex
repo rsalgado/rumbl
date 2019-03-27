@@ -22,6 +22,9 @@
 
       <%= password_input cf, :password, placeholder: "Password" %>
       <%= error_tag cf, :password %>
+
+      <%= password_input cf, :password_confirmation, placeholder: "Password Confirmation" %>
+      <%= error_tag cf, :password_confirmation %>
     <% end %>
   </div>
 
