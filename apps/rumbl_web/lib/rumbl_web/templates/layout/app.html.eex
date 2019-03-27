@@ -26,9 +26,12 @@
             <% end %>
           </ul>
         </nav>
-        <a href="http://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
-        </a>
+        <div class="logos">
+          <%= link "Rumbl.io", to: Routes.page_path(@conn, :index), class: "rumbl-logo" %>
+          <a href="http://phoenixframework.org/" class="phx-logo">
+            <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
+          </a>
+        </div>
       </section>
     </header>
     <main role="main" class="container">

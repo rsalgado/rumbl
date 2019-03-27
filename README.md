@@ -19,12 +19,7 @@ npm install
 3. Go up to the the `apps` directory and now get into the `rumbl` app directory. Once there, create the DB.
 ```
 cd ../../rumbl/
-mix ecto.create
-```
-4. Run the migrations and additional DB seeds.
-```
-mix ecto.setup    # This runs ecto.create, ecto.migrate and run priv/repo/seeds.exs
-mix run priv/repo/backend_seeds.exs   # This seed has to be run manually; it creates the Wolfram user
+mix ecto.setup    # This runs ecto.create, ecto.migrate, run priv/repo/seeds.exs, run priv/repo/backend_seeds.exs
 ```
 
 
