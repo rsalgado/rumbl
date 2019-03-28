@@ -1,2 +1,2 @@
-<h1>Showing user</h1>
+<h1><%= "#{first_name(@user)}'s Profile" %> </h1>
 <%= render "user.html", user: @user %>
