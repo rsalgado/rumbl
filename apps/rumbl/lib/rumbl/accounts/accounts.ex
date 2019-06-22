@@ -7,13 +7,13 @@ defmodule Rumbl.Accounts do
   import Ecto.Query
 
   def get_user(id) do
-    query = from(u in User, preload: :credential)
-    Repo.get(query, id)
+    from(u in User, preload: :credential)
+    |> Repo.get(id)
   end
 
   def get_user!(id) do
-    query = from(u in User, preload: :credential)
-    Repo.get!(query, id)
+    from(u in User, preload: :credential)
+    |> Repo.get!(id)
   end
 
   def get_user_by(params) do
@@ -21,7 +21,8 @@ defmodule Rumbl.Accounts do
   end
 
   def list_users do
-    Repo.all(User)
+    from(u in User, preload: :credential)
+    |> Repo.all()
   end
 
   def change_user(%User{} = user) do
